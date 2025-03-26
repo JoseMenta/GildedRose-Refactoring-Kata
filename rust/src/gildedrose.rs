@@ -3,6 +3,7 @@ pub struct Item {
     pub name: String,
     pub sell_in: i32,
     pub quality: i32,
+    pub strategy: Option<Box<dyn Strategy>>
 }
 
 impl Item {
@@ -11,21 +12,16 @@ impl Item {
             name: name.into(),
             sell_in,
             quality,
+            strategy: None
         }
     }
-
+    pub fn set_strategy(&mut self, strategy: Option<Box<dyn Strategy>>) {
+        self.strategy = strategy;
+    }
     pub fn update_quality(&mut self){
-        self.quality = if self.name.contains("Sulfuras"){
-            sulfuras_quality(self.quality, self.sell_in)
-        }else if self.name.contains("Aged Brie"){
-            brie_quality(self.quality, self.sell_in)
-        }else if self.name.contains("Backstage passes"){
-            backstage_quality(self.quality, self.sell_in)
-        }else if self.name.contains("Conjured"){
-            conjured_quality(self.quality, self.sell_in)
-        }else{
-            standard_quality(self.quality, self.sell_in)
-        }
+       if let Some(strategy) = &self.strategy  {
+           self.quality = strategy.execute(self.quality, self.sell_in);
+       }
     }
 }
 
@@ -35,57 +31,78 @@ impl Display for Item {
     }
 }
 
-
-
-
-
-pub fn brie_quality(quality: i32, sell_in: i32) -> i32 {
-    if quality <= 0 || quality >= 50{
-        return quality
-    }
-    if sell_in <= 0 && quality <= 48{
-        return quality + 2;
-    }
-    quality + 1
+pub trait Strategy{
+    fn execute(&self, quality: i32, sell_in: i32) -> i32;
 }
 
-pub fn standard_quality(quality: i32, sell_in: i32) -> i32 {
-    if quality <= 0 || quality >= 50{
-        return quality;
+struct BrieStrategy{}
+
+impl Strategy for BrieStrategy {
+    fn execute(&self, quality: i32, sell_in: i32) -> i32 {
+        if quality <= 0 || quality >= 50{
+            return quality
+        }
+        if sell_in <= 0 && quality <= 48{
+            return quality + 2;
+        }
+        quality + 1
     }
-    if sell_in <= 0 && quality >= 2{
-        return quality - 2;
-    }
-    quality - 1
 }
 
-pub fn sulfuras_quality(quality: i32, sell_in: i32) -> i32 {
-    return quality;
+struct StandardStrategy{}
+
+impl Strategy for StandardStrategy {
+    fn execute(&self, quality: i32, sell_in: i32) -> i32 {
+        if quality <= 0 || quality >= 50{
+            return quality;
+        }
+        if sell_in <= 0 && quality >= 2{
+            return quality - 2;
+        }
+        quality - 1
+    }
 }
 
-pub fn conjured_quality(quality: i32, sell_in: i32) -> i32 {
-    if quality <= 0 || quality >= 50{
-        return quality;
+struct SulfurasStrategy{}
+
+impl Strategy for SulfurasStrategy {
+    fn execute(&self, quality: i32, _: i32) -> i32 {
+        quality
     }
-    quality - 2
 }
 
-pub fn backstage_quality(quality: i32, sell_in: i32) -> i32 {
-    if quality <= 0 || quality >= 50{
-        return quality;
+struct ConjuredStrategy{}
+
+impl Strategy for ConjuredStrategy {
+    fn execute(&self, quality: i32, _: i32) -> i32 {
+        if quality <= 0 || quality >= 50{
+            return quality;
+        }
+        quality - 2
     }
-    if sell_in == 0{
-        return 0;
+}
+
+
+struct BackstageStrategy{}
+
+impl Strategy for BackstageStrategy {
+    fn execute(&self, quality: i32, sell_in: i32) -> i32 {
+        if quality <= 0 || quality >= 50{
+            return quality;
+        }
+        if sell_in == 0{
+            return 0;
+        }
+        let updated_quality = match sell_in{
+            6..=10 => quality + 2,
+            0..=5 => quality + 3,
+            _ => quality + 1,
+        };
+        if updated_quality >= 50{
+            return 50;
+        }
+        updated_quality
     }
-    let updated_quality = match sell_in{
-        6..=10 => quality + 2,
-        0..=5 => quality + 3,
-        _ => quality + 1,
-    };
-    if updated_quality >= 50{
-        return 50;
-    }
-    updated_quality
 }
 
 pub struct GildedRose {
@@ -110,6 +127,17 @@ impl GildedRose {
     // Sulfuras siempre tiene quality en 80
     pub fn update_quality(&mut self) {
         for i in 0..self.items.len() {
+            if  self.items[i].name.contains("Sulfuras"){
+                self.items[i].set_strategy(Some(Box::new(SulfurasStrategy{})))
+            }else if  self.items[i].name.contains("Aged Brie"){
+                self.items[i].set_strategy(Some(Box::new(BrieStrategy{})))
+            }else if  self.items[i].name.contains("Backstage passes"){
+                self.items[i].set_strategy(Some(Box::new(BackstageStrategy{})))
+            }else if self.items[i].name.contains("Conjured"){
+                self.items[i].set_strategy(Some(Box::new(ConjuredStrategy{})))
+            }else{
+                self.items[i].set_strategy(Some(Box::new(StandardStrategy{})))
+            }
             self.items[i].update_quality()
         }
     }
