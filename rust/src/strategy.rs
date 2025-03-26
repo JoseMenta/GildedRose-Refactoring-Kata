@@ -50,9 +50,9 @@ impl Strategy for ConjuredStrategy {
 }
 
 
-pub struct BackstageStrategy{}
+pub struct BackstageTAFKALStrategy{}
 
-impl Strategy for BackstageStrategy {
+impl Strategy for BackstageTAFKALStrategy {
     fn execute(&self, quality: i32, sell_in: i32) -> i32 {
         if quality <= 0 || quality >= 50{
             return quality;
@@ -63,6 +63,27 @@ impl Strategy for BackstageStrategy {
         let updated_quality = match sell_in{
             6..=10 => quality + 2,
             0..=5 => quality + 3,
+            _ => quality + 1,
+        };
+        if updated_quality >= 50{
+            return 50;
+        }
+        updated_quality
+    }
+}
+pub struct BackStageGalaStrategy{}
+impl Strategy for BackStageGalaStrategy {
+    fn execute(&self, quality: i32, sell_in: i32) -> i32 {
+        if quality <= 0 || quality >= 50{
+            return quality;
+        }
+        if sell_in == 0{
+            return 0;
+        }
+        let updated_quality = match sell_in{
+            11.. => quality + 2,
+            6..=10 => quality + 3,
+            0..=5 => quality + 4,
             _ => quality + 1,
         };
         if updated_quality >= 50{
