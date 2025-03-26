@@ -80,4 +80,52 @@ mod tests {
         rose.update_quality();
         assert_eq!(18, rose.items[0].quality);
     }
+
+    #[test]
+    pub fn test_backstage_gala_passes_quality_11(){
+        let items = vec![Item::new("Backstage passes to a GALA concert", 11, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(22, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_backstage_gala_passes_quality_10(){
+        let items = vec![Item::new("Backstage passes to a GALA concert", 10, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(23, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_backstage_gala_passes_quality_6(){
+        let items = vec![Item::new("Backstage passes to a GALA concert", 6, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(23, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_backstage_gala_passes_quality_5(){
+        let items = vec![Item::new("Backstage passes to a GALA concert", 5, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(24, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_backstage_gala_passes_quality_1(){
+        let items = vec![Item::new("Backstage passes to a GALA concert", 1, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(24, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_backstage_gala_passes_quality_0(){
+        let items = vec![Item::new("Backstage passes to a GALA concert", 0, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(0, rose.items[0].quality);
+    }
 }

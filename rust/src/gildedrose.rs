@@ -1,5 +1,5 @@
 use crate::item::Item;
-use crate::strategy::{BackstageStrategy, BrieStrategy, ConjuredStrategy, StandardStrategy, SulfurasStrategy};
+use crate::strategy::{BackStageGalaStrategy, BackstageTAFKALStrategy, BrieStrategy, ConjuredStrategy, StandardStrategy, SulfurasStrategy};
 
 pub struct GildedRose {
     pub items: Vec<Item>,
@@ -16,11 +16,13 @@ impl GildedRose {
                 item.set_strategy(Some(Box::new(SulfurasStrategy{})))
             }else if  item.name.contains("Aged Brie"){
                 item.set_strategy(Some(Box::new(BrieStrategy{})))
-            }else if  item.name.contains("Backstage passes"){
-                item.set_strategy(Some(Box::new(BackstageStrategy{})))
+            }else if  item.name.contains("Backstage passes to a TAFKAL80ETC"){
+                item.set_strategy(Some(Box::new(BackstageTAFKALStrategy{})))
             }else if item.name.contains("Conjured"){
                 item.set_strategy(Some(Box::new(ConjuredStrategy{})))
-            }else{
+            }else if item.name.contains("Backstage passes to a GALA"){
+                item.set_strategy(Some(Box::new(BackStageGalaStrategy{})))
+            } else{
                 item.set_strategy(Some(Box::new(StandardStrategy{})))
             }
             item.update_quality()
