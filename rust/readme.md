@@ -1,4 +1,16 @@
-# Level 3 justification
+# Overall design
+The implementation of this project was made in Rust, this decision was made because
+we wanted to get more experience with the language and its features. However, we
+recognize that Rust is not the best election for this type of project, because it is not designed
+for object-oriented programming, and the requirements of the project are more easily implemented
+with a language like Java or C#.
+
+Even though Rust is not the apropiate language for this type projects, we implemented all the requirements 
+except the ones that needs polymorphism, because Rust does not have a good support for this feature. Moreover, the team
+is sure that this project helped us to improve our skills with Rust, understanding better the patterns and how to implement
+them in a different coding language.
+
+## Polymorphism in Rust
 Level 3 requires us to implement polymorphism with the item classes, allowing the code to extend the Item class depending on the type of item. 
 However, since we decided to implement the project in Rust, this requirement makes the code less readable and more difficult to understand.
 
