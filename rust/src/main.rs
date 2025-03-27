@@ -2,6 +2,7 @@ mod gildedrose;
 mod item;
 mod strategy;
 mod tests;
+mod state;
 
 use gildedrose::{GildedRose};
 use item::Item;
