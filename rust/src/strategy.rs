@@ -59,7 +59,7 @@ impl Strategy for ConjuredStrategy {
             return (0,obtained_selllin);
         }
         if final_quality > 50{
-            return (50,obtained_selllin);
+            return (final_quality,obtained_selllin);
         }
         (final_quality,obtained_selllin)
     }
