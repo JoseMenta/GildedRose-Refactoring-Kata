@@ -1,51 +1,57 @@
+
+macro_rules! update_sellin {
+    ($sell_in:ident) => {
+        if $sell_in == 0 { 0 } else { $sell_in - 1 }
+    };
+}
 pub trait Strategy{
-    fn execute(&self, quality: i32, sell_in: i32) -> i32;
+    fn execute(&self, quality: i32, sell_in: i32) -> (i32, i32);
 }
 
 pub struct BrieStrategy{}
 
 impl Strategy for BrieStrategy {
-    fn execute(&self, quality: i32, sell_in: i32) -> i32 {
+    fn execute(&self, quality: i32, sell_in: i32) -> (i32, i32) {
         if quality <= 0 || quality >= 50{
-            return quality
+            return (quality ,update_sellin!(sell_in));
         }
         if sell_in <= 0 && quality <= 48{
-            return quality + 2;
+            return (quality + 2,update_sellin!(sell_in));
         }
-        quality + 1
+        (quality + 1,update_sellin!(sell_in))
     }
 }
 
 pub struct StandardStrategy{}
 
 impl Strategy for StandardStrategy {
-    fn execute(&self, quality: i32, sell_in: i32) -> i32 {
+    fn execute(&self, quality: i32, sell_in: i32) -> (i32,i32) {
         if quality <= 0 || quality >= 50{
-            return quality;
+            return (quality,update_sellin!(sell_in));
         }
         if sell_in <= 0 && quality >= 2{
-            return quality - 2;
+            return (quality - 2,update_sellin!(sell_in));
         }
-        quality - 1
+        (quality - 1,update_sellin!(sell_in))
     }
 }
 
 pub struct SulfurasStrategy{}
 
 impl Strategy for SulfurasStrategy {
-    fn execute(&self, quality: i32, _: i32) -> i32 {
-        quality
+    fn execute(&self, quality: i32, sell_in: i32) -> (i32,i32) {
+        (quality,sell_in)
     }
 }
 
 pub struct ConjuredStrategy{}
 
 impl Strategy for ConjuredStrategy {
-    fn execute(&self, quality: i32, _: i32) -> i32 {
+    fn execute(&self, quality: i32, sell_in: i32) -> (i32,i32) {
         if quality <= 0 || quality >= 50{
-            return quality;
+            return (quality,sell_in);
         }
-        quality - 2
+        (quality - 2,sell_in)
     }
 }
 
@@ -53,12 +59,12 @@ impl Strategy for ConjuredStrategy {
 pub struct BackstageTAFKALStrategy{}
 
 impl Strategy for BackstageTAFKALStrategy {
-    fn execute(&self, quality: i32, sell_in: i32) -> i32 {
+    fn execute(&self, quality: i32, sell_in: i32) -> (i32,i32) {
         if quality <= 0 || quality >= 50{
-            return quality;
+            return (quality,update_sellin!(sell_in));
         }
         if sell_in == 0{
-            return 0;
+            return (0,update_sellin!(sell_in));
         }
         let updated_quality = match sell_in{
             6..=10 => quality + 2,
@@ -66,19 +72,19 @@ impl Strategy for BackstageTAFKALStrategy {
             _ => quality + 1,
         };
         if updated_quality >= 50{
-            return 50;
+            return (50,update_sellin!(sell_in));
         }
-        updated_quality
+        (updated_quality,update_sellin!(sell_in))
     }
 }
 pub struct BackStageGalaStrategy{}
 impl Strategy for BackStageGalaStrategy {
-    fn execute(&self, quality: i32, sell_in: i32) -> i32 {
+    fn execute(&self, quality: i32, sell_in: i32) -> (i32,i32) {
         if quality <= 0 || quality >= 50{
-            return quality;
+            return (quality,update_sellin!(sell_in));
         }
         if sell_in == 0{
-            return 0;
+            return (0,update_sellin!(sell_in));
         }
         let updated_quality = match sell_in{
             11.. => quality + 2,
@@ -87,8 +93,8 @@ impl Strategy for BackStageGalaStrategy {
             _ => quality + 1,
         };
         if updated_quality >= 50{
-            return 50;
+            return (50,update_sellin!(sell_in));
         }
-        updated_quality
+        (updated_quality,update_sellin!(sell_in))
     }
 }

@@ -25,6 +25,13 @@ mod tests {
         assert_eq!(41, rose.items[0].quality);
     }
     #[test]
+    pub fn test_aged_brie_sellin(){
+        let items = vec![Item::new("Aged Brie", 2, 40)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(1, rose.items[0].sell_in);
+    }
+    #[test]
     pub fn test_sulfuras_quality(){
         let items = vec![Item::new("Sulfuras, Hand of Ragnaros", 2, 80)];
         let mut rose = GildedRose::new(items);
@@ -80,6 +87,13 @@ mod tests {
         rose.update_quality();
         assert_eq!(18, rose.items[0].quality);
     }
+    #[test]
+    pub fn test_sellin(){
+        let items = vec![Item::new("foo", 2, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(1, rose.items[0].sell_in);
+    }
 
     #[test]
     pub fn test_backstage_gala_passes_quality_11(){
@@ -127,5 +141,21 @@ mod tests {
         let mut rose = GildedRose::new(items);
         rose.update_quality();
         assert_eq!(0, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_conjured_quality(){
+        let items = vec![Item::new("Conjured Mana Cake", 3, 6)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(4, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_backstage_gala_passes_sellin(){
+        let items = vec![Item::new("Backstage passes to a GALA concert", 5, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(4, rose.items[0].sell_in);
     }
 }

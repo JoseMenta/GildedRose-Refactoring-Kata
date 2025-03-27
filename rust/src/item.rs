@@ -23,7 +23,7 @@ impl Item {
     }
     pub fn update_quality(&mut self){
         if let Some(strategy) = &self.strategy  {
-            self.quality = strategy.execute(self.quality, self.sell_in);
+            (self.quality,self.sell_in) = strategy.execute(self.quality, self.sell_in);
         }
     }
 }
