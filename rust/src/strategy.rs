@@ -44,14 +44,24 @@ impl Strategy for SulfurasStrategy {
     }
 }
 
-pub struct ConjuredStrategy{}
+
+//Implement decorator using the same Trait (interface), saving the wrapped strategy
+pub struct ConjuredStrategy{
+    pub wrapped_strategy: Box<dyn Strategy>,
+}
 
 impl Strategy for ConjuredStrategy {
     fn execute(&self, quality: i32, sell_in: i32) -> (i32,i32) {
-        if quality <= 0 || quality >= 50{
-            return (quality,sell_in);
+        let (obtained_quality,obtained_selllin) = self.wrapped_strategy.execute(quality, sell_in);
+        let delta_quality = 2 * (obtained_quality - quality);
+        let final_quality = quality + delta_quality;
+        if final_quality <= 0 {
+            return (0,obtained_selllin);
         }
-        (quality - 2,sell_in)
+        if final_quality > 50{
+            return (50,obtained_selllin);
+        }
+        (final_quality,obtained_selllin)
     }
 }
 

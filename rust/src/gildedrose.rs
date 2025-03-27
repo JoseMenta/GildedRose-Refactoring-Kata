@@ -1,5 +1,5 @@
 use crate::item::Item;
-use crate::strategy::{BackStageGalaStrategy, BackstageTAFKALStrategy, BrieStrategy, ConjuredStrategy, StandardStrategy, SulfurasStrategy};
+use crate::strategy::{BackStageGalaStrategy, BackstageTAFKALStrategy, BrieStrategy, ConjuredStrategy, StandardStrategy, Strategy, SulfurasStrategy};
 
 pub struct GildedRose {
     pub items: Vec<Item>,
@@ -12,19 +12,22 @@ impl GildedRose {
 
     pub fn update_quality(&mut self) {
         for item in &mut self.items {
+            let mut selected_strategy: Box<dyn Strategy> =
             if item.name.contains("Sulfuras"){
-                item.set_strategy(Some(Box::new(SulfurasStrategy{})))
+                Box::new(SulfurasStrategy{})
             }else if  item.name.contains("Aged Brie"){
-                item.set_strategy(Some(Box::new(BrieStrategy{})))
+                Box::new(BrieStrategy{})
             }else if  item.name.contains("Backstage passes to a TAFKAL80ETC"){
-                item.set_strategy(Some(Box::new(BackstageTAFKALStrategy{})))
-            }else if item.name.contains("Conjured"){
-                item.set_strategy(Some(Box::new(ConjuredStrategy{})))
+                Box::new(BackstageTAFKALStrategy{})
             }else if item.name.contains("Backstage passes to a GALA"){
-                item.set_strategy(Some(Box::new(BackStageGalaStrategy{})))
+                Box::new(BackStageGalaStrategy{})
             } else{
-                item.set_strategy(Some(Box::new(StandardStrategy{})))
+                Box::new(StandardStrategy{})
+            };
+            if item.name.contains("Conjured"){
+                selected_strategy = Box::new(ConjuredStrategy{wrapped_strategy: selected_strategy})
             }
+            item.set_strategy(Some(selected_strategy));
             item.update_quality()
         }
     }

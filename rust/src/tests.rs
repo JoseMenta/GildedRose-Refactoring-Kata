@@ -11,7 +11,7 @@ mod tests {
         assert_eq!(50, rose.items[0].quality);
     }
     #[test]
-    pub fn test_aged_brie_quality_increase_doble(){
+    pub fn test_aged_brie_quality_increase_double(){
         let items = vec![Item::new("Aged Brie", 0, 40)];
         let mut rose = GildedRose::new(items);
         rose.update_quality();
@@ -141,6 +141,74 @@ mod tests {
         let mut rose = GildedRose::new(items);
         rose.update_quality();
         assert_eq!(0, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_conjured_aged_brie_0(){
+        let items = vec![Item::new("Conjured, Aged Brie", 0, 40)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(44, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_conjured_aged_brie_1(){
+        let items = vec![Item::new("Conjured, Aged Brie", 1, 40)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(42, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_conjured_normal_item_quality(){
+        let items = vec![Item::new("Conjured, foo", 2, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(18, rose.items[0].quality);
+    }
+    #[test]
+    pub fn test_conjured_normal_after_sellin(){
+        let items = vec![Item::new("Conjured, foo", 0, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(16, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_conjured_backstage_passes_quality(){
+        let items = vec![Item::new("Conjured, Backstage passes to a TAFKAL80ETC concert", 15, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(22, rose.items[0].quality);
+    }
+    #[test]
+    pub fn test_conjured_backstage_passes_quality_10(){
+        let items = vec![Item::new("Conjured, Backstage passes to a TAFKAL80ETC concert", 10, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(24, rose.items[0].quality);
+    }
+    #[test]
+    pub fn test_conjured_backstage_passes_quality_5(){
+        let items = vec![Item::new("Conjured, Backstage passes to a TAFKAL80ETC concert", 5, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(26, rose.items[0].quality);
+    }
+    #[test]
+    pub fn test_conjured_backstage_passes_quality_0(){
+        let items = vec![Item::new("Conjured, Backstage passes to a TAFKAL80ETC concert", 0, 20)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(0, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn test_conjured_sulfuras_quality(){
+        let items = vec![Item::new("Conjured, Sulfuras, Hand of Ragnaros", 2, 80)];
+        let mut rose = GildedRose::new(items);
+        rose.update_quality();
+        assert_eq!(80, rose.items[0].quality);
     }
 
     #[test]
