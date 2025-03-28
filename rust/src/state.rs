@@ -32,10 +32,10 @@ pub trait State: StateClone{
 }
 
 #[derive(Clone)]
-struct StandardState{
-    quality_delta: i32,
-    sell_in_limit: i32,
-    next_state: Box<dyn State>,
+pub struct StandardState{
+    pub quality_delta: i32,
+    pub sell_in_limit: i32,
+    pub next_state: Box<dyn State>,
 }
 
 impl StateClone for StandardState {
@@ -59,8 +59,8 @@ impl State for StandardState {
 }
 
 #[derive(Clone)]
-struct ConjuredState{
-    wrapped_state: Box<dyn State>,
+pub struct ConjuredState{
+    pub wrapped_state: Box<dyn State>,
 }
 
 impl StateClone for ConjuredState {
@@ -92,8 +92,30 @@ impl State for ConjuredState {
         }
     }
 }
+
 #[derive(Clone)]
-struct StableState{}
+pub struct ConstantState{
+    pub quality: i32
+}
+impl StateClone for ConstantState {
+    fn clone_box(&self) -> Box<dyn State> {
+        Box::new(self.clone())
+    }
+}
+impl State for ConstantState {
+    fn update(&self, _: i32, sell_in: i32) -> (i32, i32) {
+        (self.quality, sell_in)
+    }
+
+    fn next_state(&self, _: i32) -> Option<Box<dyn State>> {
+        None
+    }
+}
+
+
+
+#[derive(Clone)]
+pub struct StableState{}
 
 
 impl StateClone for StableState {
@@ -106,7 +128,7 @@ impl State for StableState {
         (quality, sell_in)
     }
 
-    fn next_state(&self, sell_in: i32) -> Option<Box<dyn State>> {
+    fn next_state(&self, _: i32) -> Option<Box<dyn State>> {
         None
     }
 }

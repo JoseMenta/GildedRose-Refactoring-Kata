@@ -100,7 +100,7 @@ impl Strategy for BackStageGalaStrategy {
             11.. => quality + 2,
             6..=10 => quality + 3,
             0..=5 => quality + 4,
-            _ => quality + 1,
+            _ => quality + 1, //unreachable
         };
         if updated_quality >= 50{
             return (50,update_sellin!(sell_in));
