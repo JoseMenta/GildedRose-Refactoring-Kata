@@ -25,10 +25,16 @@ impl Clone for Box<dyn State> {
     }
 }
 
-//Implementing State requires implementing StateClone
-pub trait State: StateClone{
+//Implementing State requires implementing StateClone ('static means it does not have a reference shorter than static)
+pub trait State: StateClone + 'static {
     fn update(&self, quality: i32, sell_in: i32) -> (i32, i32);
     fn next_state(&self, sell_in: i32) -> Option<Box<dyn State>>;
+}
+
+impl <T: State + Clone> StateClone for T {
+    fn clone_box(&self) -> Box<dyn State> {
+        Box::new(self.clone())
+    }
 }
 
 #[derive(Clone)]
@@ -36,12 +42,6 @@ pub struct StandardState{
     pub quality_delta: i32,
     pub sell_in_limit: i32,
     pub next_state: Box<dyn State>,
-}
-
-impl StateClone for StandardState {
-    fn clone_box(&self) -> Box<dyn State> {
-        Box::new(self.clone())
-    }
 }
 
 impl State for StandardState {
@@ -63,11 +63,6 @@ pub struct ConjuredState{
     pub wrapped_state: Box<dyn State>,
 }
 
-impl StateClone for ConjuredState {
-    fn clone_box(&self) -> Box<dyn State> {
-        Box::new(self.clone())
-    }
-}
 
 impl State for ConjuredState {
 
@@ -97,11 +92,7 @@ impl State for ConjuredState {
 pub struct ConstantState{
     pub quality: i32
 }
-impl StateClone for ConstantState {
-    fn clone_box(&self) -> Box<dyn State> {
-        Box::new(self.clone())
-    }
-}
+
 impl State for ConstantState {
     fn update(&self, _: i32, sell_in: i32) -> (i32, i32) {
         (self.quality, sell_in)
@@ -118,11 +109,6 @@ impl State for ConstantState {
 pub struct StableState{}
 
 
-impl StateClone for StableState {
-    fn clone_box(&self) -> Box<dyn State> {
-        Box::new(self.clone())
-    }
-}
 impl State for StableState {
     fn update(&self, quality: i32, sell_in: i32) -> (i32, i32) {
         (quality, sell_in)
