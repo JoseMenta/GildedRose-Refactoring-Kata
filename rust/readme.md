@@ -34,3 +34,7 @@ This would require all the existing code that uses the items in `GildedRose` to 
 all functions definitions to change to return a `Box` with the trait object. 
 
 For these reasons, we omitted this implementation and instead continued with the strategy pattern, which better fits Rust's programming style.
+## Level 6 justification
+The team decided to implement the State pattern in the level 6. This pattern was chosen because it allows to change different states of the items depending of it and it replace the strategy pattern. 
+However, the implementation of it results in a more complex code because it was necessary to implement a machine state that allows to change the state of the item.
+The complexity of it is because Rust does not have a good support for polymorphism, and the implementation of the state pattern is more complex than in other languages like Java or C#.
