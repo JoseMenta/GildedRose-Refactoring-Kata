@@ -1,8 +1,20 @@
-# Level 3 justification
-Level 3 requires us to implement polymorphism with the item classes, allowing the code to extend the Item class depending on the type of item. 
+# Overall design
+The implementation of this project was made in Rust, this decision was made because
+we wanted to get more experience with the language and its features. However, we
+recognize that Rust is not the best election for this type of project, because it is not designed
+for object-oriented programming, and the requirements of the project are more easily implemented
+with a language like Java or C#.
+
+Even though Rust is not the apropiate language for this type projects, we implemented all the requirements
+except the ones that needs polymorphism, because Rust does not have a good support for this feature. Moreover, the team
+is sure that this project helped us to improve our skills with Rust, understanding better the patterns and how to implement
+them in a different coding language.
+
+## Polymorphism in Rust (level 3)
+Level 3 requires us to implement polymorphism with the item classes, allowing the code to extend the Item class depending on the type of item.
 However, since we decided to implement the project in Rust, this requirement makes the code less readable and more difficult to understand.
 
-This is because, in order to implement polymorphism, dynamic dispatch should be used with traits and the 
+This is because, in order to implement polymorphism, dynamic dispatch should be used with traits and the
 signature of the _GildedRose_ struct must be changed to the following
 ```rust
 pub struct GildedRose {
@@ -18,7 +30,20 @@ pub trait ItemTrait{
     fn get_name(&self) -> String;
 }
 ```
-This would require all the existing code that uses the items in `GildedRose` to change to use the methods in the trait, and 
-all functions definitions to change to return a `Box` with the trait object. 
+This would require all the existing code that uses the items in `GildedRose` to change to use the methods in the trait, and
+all functions definitions to change to return a `Box` with the trait object.
 
 For these reasons, we omitted this implementation and instead continued with the strategy pattern, which better fits Rust's programming style.
+
+
+## Level 6 justification
+The team decided to implement the State pattern in the level 6. This pattern was chosen because it allows to change different states of the items depending on its properties
+and it replaces the strategy pattern.
+
+However, the implementation of it results in a more complex code because of the implementation of the state machine that allows to change the state of the item.
+
+Part of the complexity of it is again because Rust does not have a good support for polymorphism, and the implementation of the state pattern is more complex than in other languages like Java or C#, requiring
+the use of dynamic dispatch again. Also, ownership rules made returning the next state from a given state more difficult than usual, requiring the implementation of the `StateClone` trait for each state, which was
+done using a _blanket implementation_ and deriving the `Clone` trait for each state.
+
+Because of this, the implementation is left on branch _level\_6_ and not in the main branch.
